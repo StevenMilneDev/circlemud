@@ -1,0 +1,141 @@
+autorun starting game Sat Mar  2 17:34:58 UTC 2019
+running bin/circle -q 4000
+Game Config File: etc/config: No such file or directory
+Mar  2 17:34:58 :: Using etc/config for configuration.
+Mar  2 17:34:58 :: CircleMUD, version 3.1
+Mar  2 17:34:58 :: OasisOLC 2.0.6
+Mar  2 17:34:58 :: Using lib as data directory.
+Mar  2 17:34:58 :: Running game on port 4000.
+Mar  2 17:34:58 :: Finding player limit.
+Mar  2 17:34:58 ::    Setting player limit to 300 using rlimit.
+Mar  2 17:34:58 :: Opening mother connection.
+Mar  2 17:34:58 :: Binding to all IP interfaces on this host.
+Mar  2 17:34:58 :: Boot db -- BEGIN.
+Mar  2 17:34:58 :: Resetting the game time:
+Mar  2 17:34:58 ::    Current Gametime: 13H 32D 7M 841Y.
+Mar  2 17:34:58 :: Reading news, credits, help, bground, info & motds.
+Mar  2 17:34:58 :: Loading spell definitions.
+Mar  2 17:34:58 :: Loading zone table.
+Mar  2 17:34:58 ::    30 zones, 1440 bytes.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/0.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/9.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/15.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/25.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/30.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/31.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/33.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/35.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/36.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/40.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/50.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/51.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/52.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/53.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/54.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/60.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/61.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/62.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/63.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/64.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/65.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/70.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/71.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/72.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/73.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/79.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/120.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/150.zon, attempting to fix.
+Mar  2 17:34:58 :: SYSERR: Format error in numeric constant line of world/zon/186.zon, attempting to fix.
+Mar  2 17:34:58 :: Loading rooms.
+Mar  2 17:34:58 ::    1880 rooms, 210560 bytes.
+Mar  2 17:34:58 :: Renumbering rooms.
+Mar  2 17:34:58 :: Checking start rooms.
+Mar  2 17:34:58 :: Loading mobs and generating index.
+Mar  2 17:34:58 ::    569 mobs, 9104 bytes in index, 268568 bytes in prototypes.
+Mar  2 17:34:58 :: Loading objs and generating index.
+Mar  2 17:34:58 ::    679 objs, 10864 bytes in index, 119504 bytes in prototypes.
+Mar  2 17:34:58 :: Renumbering zone table.
+Mar  2 17:34:58 :: Loading shops.
+Mar  2 17:34:58 :: Loading help entries.
+Mar  2 17:34:58 ::    298 entries, 7152 bytes.
+Mar  2 17:34:58 :: Generating player index.
+Mar  2 17:34:58 ::    1 players in database.
+Mar  2 17:34:58 :: Loading fight messages.
+Mar  2 17:34:58 :: Loading social messages.
+Mar  2 17:34:58 :: Social table contains 103 socials.
+Mar  2 17:34:58 :: Building command list.
+Mar  2 17:34:58 :: Command info rebuilt, 329 total commands.
+Mar  2 17:34:58 :: Assigning function pointers:
+Mar  2 17:34:58 ::    Mobiles.
+Mar  2 17:34:58 ::    Shopkeepers.
+Mar  2 17:34:58 ::    Objects.
+Mar  2 17:34:58 ::    Rooms.
+Mar  2 17:34:58 :: Assigning spell and skill levels.
+Mar  2 17:34:58 :: Sorting command list and spells.
+Mar  2 17:34:58 :: Booting mail system.
+Mar  2 17:34:58 ::    0 bytes read.
+Mar  2 17:34:58 ::    Mail file read -- 0 messages.
+Mar  2 17:34:58 :: Reading banned site and invalid-name list.
+Mar  2 17:34:58 ::    Ban file 'etc/badsites' doesn't exist.
+Mar  2 17:34:58 :: Booting houses.
+Mar  2 17:34:58 :: Resetting #0: Limbo - Internal (rooms 0-99).
+Mar  2 17:34:58 :: Resetting #9: River Island Of Minos (rooms 900-999).
+Mar  2 17:34:58 :: Resetting #12: God Simplex (rooms 1200-1299).
+Mar  2 17:34:58 :: Resetting #15: The Straight Path (rooms 1500-1599).
+Mar  2 17:34:58 :: Resetting #25: The High Tower Of Magic (rooms 2500-2699).
+Mar  2 17:34:58 :: Resetting #30: Northern Midgaard Main City (rooms 3000-3099).
+Mar  2 17:34:58 :: Resetting #31: Southern part of Midgaard (rooms 3100-3299).
+Mar  2 17:34:58 :: Resetting #33: The Three Of Swords (rooms 3300-3399).
+Mar  2 17:34:58 :: Resetting #35: Miden'Nir (rooms 3500-3599).
+Mar  2 17:34:58 :: Resetting #36: The Chessboard of Midgaard (rooms 3600-3699).
+Mar  2 17:34:58 :: Resetting #40: Mines of Moria (rooms 4000-4198).
+Mar  2 17:34:58 :: Resetting #50: The Great Eastern Desert (rooms 5000-5099).
+Mar  2 17:34:58 :: Resetting #51: Drow City (rooms 5100-5199).
+Mar  2 17:34:58 :: Resetting #52: The City Of Thalos (rooms 5200-5299).
+Mar  2 17:34:58 :: Resetting #53: The Great Pyramid (rooms 5300-5399).
+Mar  2 17:34:58 :: Resetting #54: New Thalos (rooms 5400-5699).
+Mar  2 17:34:58 :: Resetting #60: Haon-Dor, Light Forest (rooms 6000-6099).
+Mar  2 17:34:58 :: Resetting #61: Haon-Dor, Dark Forest (rooms 6100-6199).
+Mar  2 17:34:58 :: Resetting #62: The Orc Enclave (rooms 6200-6299).
+Mar  2 17:34:58 :: Resetting #63: Arachnos (rooms 6300-6399).
+Mar  2 17:34:58 :: Resetting #64: Rand's Tower (rooms 6400-6499).
+Mar  2 17:34:58 :: Resetting #65: The Dwarven Kingdom (rooms 6500-6599).
+Mar  2 17:34:58 :: Resetting #70: The Sewer, First Level (rooms 7000-7099).
+Mar  2 17:34:58 :: Resetting #71: The Second Sewer (rooms 7100-7199).
+Mar  2 17:34:58 :: Resetting #72: The Sewer Maze (rooms 7200-7299).
+Mar  2 17:34:58 :: Resetting #73: The Tunnels In The Sewer (rooms 7300-7399).
+Mar  2 17:34:58 :: Resetting #79: Redferne's Residence (rooms 7900-7999).
+Mar  2 17:34:58 :: Resetting #120: Rome (rooms 12000-12099).
+Mar  2 17:34:58 :: Resetting #150: King Welmar's Castle (rooms 15000-15099).
+Mar  2 17:34:58 :: Resetting #186: Newbie Zone (rooms 18600-18699).
+Mar  2 17:34:58 :: Boot db -- DONE.
+Mar  2 17:34:58 :: Signal trapping.
+Mar  2 17:34:58 :: Entering game loop.
+Mar  2 17:34:58 :: No connections.  Going to sleep.
+Mar  2 17:35:00 :: New connection.  Waking up.
+SYSERR: gethostbyaddr: Success
+Mar  2 17:35:06 :: Steve [172.16.102.1] has connected.
+Mar  2 17:35:09 :: Steve retrieving crash-saved items and entering game.
+Mar  2 17:35:09 :: Steve (level 34) has 1 object (max 30).
+Mar  2 17:35:57 :: Steve has rented (20/day, 20 tot.)
+Mar  2 17:36:02 :: Steve un-renting and entering game.
+Mar  2 17:36:02 :: Steve (level 34) has 1 object (max 30).
+Mar  2 17:36:21 :: Steve has rented (20/day, 20 tot.)
+Mar  2 17:36:26 :: Losing player: Steve.
+Mar  2 17:36:26 :: No connections.  Going to sleep.
+Mar  2 17:36:33 :: New connection.  Waking up.
+SYSERR: gethostbyaddr: Success
+Mar  2 17:36:37 :: Steve [172.16.102.1] has connected.
+Mar  2 17:36:43 :: Steve un-renting and entering game.
+Mar  2 17:36:43 :: Steve (level 34) has 1 object (max 30).
+Mar  2 17:36:48 :: (GC) Shutdown by Steve.
+Mar  2 17:36:48 :: Closing all sockets.
+Mar  2 17:36:48 :: Closing link to: Steve.
+Mar  2 17:36:48 :: Saving current MUD time.
+Mar  2 17:36:48 :: Normal termination of game.
+Mar  2 17:36:48 :: Clearing game world.
+Mar  2 17:36:48 :: Clearing other memory.
+Mar  2 17:36:48 :: Done.
+Quick boot mode -- rent check supressed.
+Using file descriptor for logging.
+autoscript killed Sat Mar  2 17:36:48 UTC 2019
