@@ -168,20 +168,20 @@ int rent_file_timeout = 30;
 /* ROOM NUMBERS */
 
 /* virtual number of room that mortals should enter at */
-room_vnum mortal_start_room = 3001;
+room_vnum mortal_start_room = 000;
 
 /* virtual number of room that immorts should enter at by default */
-room_vnum immort_start_room = 1204;
+room_vnum immort_start_room = 000;
 
 /* virtual number of room that frozen players should enter at */
-room_vnum frozen_start_room = 1202;
+room_vnum frozen_start_room = 000;
 
 /*
  * virtual numbers of donation rooms.  note: you must change code in
  * do_drop of act.item.c if you change the number of non-NOWHERE
  * donation rooms.
  */
-room_vnum donation_room_1 = 3063;
+room_vnum donation_room_1 = 000;
 room_vnum donation_room_2 = NOWHERE;	/* unused - room for expansion */
 room_vnum donation_room_3 = NOWHERE;	/* unused - room for expansion */
 
@@ -249,7 +249,7 @@ int max_bad_pws = 3;
 int siteok_everyone = TRUE;
 
 /*
- * Some nameservers are very slow and cause the game to lag terribly every 
+ * Some nameservers are very slow and cause the game to lag terribly every
  * time someone logs in.  The lag is caused by the gethostbyaddr() function
  * which is responsible for resolving numeric IP addresses to alphabetic names.
  * Sometimes, nameservers can be so slow that the incredible lag caused by

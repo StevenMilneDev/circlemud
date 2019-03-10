@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=circlemud
-VERSION=1.0.0
+VERSION=1.0.0-empty
 
 IMAGE=$NAME
 PORT=4000
@@ -26,7 +26,7 @@ elif [ "$1" = "shell" ]; then
 		exit
 elif [ "$1" = "dev" ]; then
 	# If initial state not populated then populate it now
-	if [ ! -a ./state/etc ]; then
+	if [ ! -a ./state/etc/players ]; then
 		cp -r ./circle/lib/* ./state/
 	fi
 
