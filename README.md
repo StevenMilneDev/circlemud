@@ -6,10 +6,9 @@ This repository contains a Dockerised version of [CircleMUD](https://www.circlem
 - auto-medit by Jason Yarber
 
 ## Usage
-
 To run an instance of CircleMUD run the following commands;
 
-```
+```bash
 docker pull circlemud:latest
 
 docker run --detach \
