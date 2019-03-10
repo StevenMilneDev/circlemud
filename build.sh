@@ -1,17 +1,27 @@
 #!/bin/bash
 
-CONTAINER_NAME=mud
-IMAGE_NAME=circlemud
-TAG=wip
+NAME=circlemud
+VERSION=1.0.0
+
+IMAGE=$NAME
+PORT=4000
+TAG=$VERSION
+VOLUME=/usr/circle/lib
 
 # Cleanup old build resources
-docker kill $CONTAINER_NAME
-docker rm $CONTAINER_NAME
+docker kill $NAME
+docker rm $NAME
 
-# Build the Docker image and run the container
-docker build --tag $IMAGE_NAME:$TAG .
+if [ "$1" = "dev" ]; then
+	# Create bind-mount area
+	cp ./payloads/circle/lib/* ./state
+	TAG=$VERSION-dev
+	VOLUME=$(pwd)/state:$VOLUME
+fi
+
+docker build --tag $IMAGE:$TAG .
 docker run --detach \
-	--publish 4000:4000 \
-	--volume /usr/circle/lib \
-	--name $CONTAINER_NAME \
-	$IMAGE_NAME:$TAG
+	--publish $PORT:4000 \
+	--volume $VOLUME \
+	--name $NAME \
+	$IMAGE:$TAG

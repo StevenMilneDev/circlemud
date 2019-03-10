@@ -1,3 +1,8 @@
+
+# Platform files
 .DS_Store
-*.tar.gz
-*.tar
+
+# Untracked state
+state/*
+!state/text
+!state/world

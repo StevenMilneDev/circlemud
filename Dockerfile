@@ -6,10 +6,10 @@ RUN apt-get update && apt-get install -y \
 	 make
 
 # Copy payloads into the container
-COPY ./payloads/circle /usr/circle
+COPY ./circle /usr/circle
 COPY ./config.c /usr/circle/src/config.c
-COPY ./payloads/world /usr/circle/lib/world
-COPY ./payloads/text /usr/circle/lib/text
+COPY ./state/world /usr/circle/lib/world
+COPY ./state/text /usr/circle/lib/text
 
 # Compile engine
 RUN cd /usr/circle && \
