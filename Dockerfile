@@ -5,22 +5,11 @@ RUN apt-get update && apt-get install -y \
    gcc \
 	 make
 
-# Copy engine payload into container
-COPY ./engine.tar.gz /usr/circlemud.tar.gz
-RUN cd /usr && \
-	gunzip circlemud.tar.gz && \
-	tar -xf circlemud.tar && \
-	rm circlemud.tar
-
-# Copy the initial world state into the container
-COPY ./world.tar.gz /usr/circle/world.tar.gz
-RUN cd /usr/circle && \
-	gunzip world.tar.gz && \
-	tar -xf world.tar && \
-	rm world.tar
-
-# Copy engine configuration into container
+# Copy payloads into the container
+COPY ./payloads/circle /usr/circle
 COPY ./config.c /usr/circle/src/config.c
+COPY ./payloads/world /usr/circle/lib/world
+COPY ./payloads/text /usr/circle/lib/text
 
 # Compile engine
 RUN cd /usr/circle && \
