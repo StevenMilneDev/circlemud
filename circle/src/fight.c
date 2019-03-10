@@ -28,6 +28,10 @@ struct char_data *next_combat_list = NULL;
 
 /* External structures */
 extern struct message_list fight_messages[MAX_MESSAGES];
+extern int pk_allowed;		/* see config.c */
+extern int max_exp_gain;	/* see config.c */
+extern int max_exp_loss;	/* see config.c */
+extern int max_npc_corpse_time, max_pc_corpse_time;
 
 /* External procedures */
 char *fread_action(FILE *fl, int nr);
@@ -242,7 +246,7 @@ void set_fighting(struct char_data *ch, struct char_data *vict)
   FIGHTING(ch) = vict;
   GET_POS(ch) = POS_FIGHTING;
 
-  if (!CONFIG_PK_ALLOWED)
+  if (!pk_allowed)
     check_killer(ch, vict);
 }
 
@@ -292,9 +296,9 @@ void make_corpse(struct char_data *ch)
   GET_OBJ_WEIGHT(corpse) = GET_WEIGHT(ch) + IS_CARRYING_W(ch);
   GET_OBJ_RENT(corpse) = 100000;
   if (IS_NPC(ch))
-    GET_OBJ_TIMER(corpse) = CONFIG_MAX_NPC_CORPSE_TIME;
+    GET_OBJ_TIMER(corpse) = max_npc_corpse_time;
   else
-    GET_OBJ_TIMER(corpse) = CONFIG_MAX_PC_CORPSE_TIME;
+    GET_OBJ_TIMER(corpse) = max_pc_corpse_time;
 
   /* transfer character's inventory to the corpse */
   corpse->contains = ch->carrying;
@@ -386,7 +390,7 @@ void perform_group_gain(struct char_data *ch, int base,
 {
   int share;
 
-  share = MIN(CONFIG_MAX_EXP_GAIN, MAX(1, base));
+  share = MIN(max_exp_gain, MAX(1, base));
 
   if (share > 1)
     send_to_char(ch, "You receive your share of experience -- %d points.\r\n", share);
@@ -421,7 +425,7 @@ void group_gain(struct char_data *ch, struct char_data *victim)
 
   /* prevent illegal xp creation when killing players */
   if (!IS_NPC(victim))
-    tot_gain = MIN(CONFIG_MAX_EXP_LOSS * 2 / 3, tot_gain);
+    tot_gain = MIN(max_exp_loss * 2 / 3, tot_gain);
 
   if (tot_members >= 1)
     base = MAX(1, tot_gain / tot_members);
@@ -441,7 +445,7 @@ void solo_gain(struct char_data *ch, struct char_data *victim)
 {
   int exp;
 
-  exp = MIN(CONFIG_MAX_EXP_GAIN, GET_EXP(victim) / 3);
+  exp = MIN(max_exp_gain, GET_EXP(victim) / 3);
 
   /* Calculate level-difference bonus */
   if (IS_NPC(ch))
@@ -723,7 +727,7 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
     dam /= 2;
 
   /* Check for PK if this is not a PK MUD */
-  if (!CONFIG_PK_ALLOWED) {
+  if (!pk_allowed) {
     check_killer(ch, victim);
     if (PLR_FLAGGED(ch, PLR_KILLER) && (ch != victim))
       dam = 0;

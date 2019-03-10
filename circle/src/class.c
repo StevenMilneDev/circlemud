@@ -27,6 +27,8 @@
 #include "interpreter.h"
 #include "constants.h"
 
+extern int siteok_everyone;
+
 /* local functions */
 void snoop_check(struct char_data *ch);
 int parse_class(char arg);
@@ -1504,11 +1506,8 @@ void do_start(struct char_data *ch)
   GET_COND(ch, FULL) = 24;
   GET_COND(ch, DRUNK) = 0;
 
-  if (CONFIG_SITEOK_ALL)
+  if (siteok_everyone)
     SET_BIT(PLR_FLAGS(ch), PLR_SITEOK);
-
-
-  ch->player_specials->saved.olc_zone = NOWHERE;
 }
 
 

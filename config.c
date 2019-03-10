@@ -16,12 +16,11 @@
 #include "structs.h"
 #include "interpreter.h"	/* alias_data definition for structs.h */
 
-/*
- * Update:  The following constants and variables are now the default values
- * for backwards compatibility with the new cedit game configurator.  If you
- * would not like to use the cedit command, you can change the values in
- * this file instead.  - Mythran
- */
+#define TRUE	1
+#define YES	1
+#define FALSE	0
+#define NO	0
+
 /*
  * Below are several constants which you can change to alter certain aspects
  * of the way CircleMUD acts.  Since this is a .c file, all you have to do
@@ -45,21 +44,6 @@
 
 
 /* GAME PLAY OPTIONS */
-#if !defined(NO)
-#define NO 0
-#endif
-
-#if !defined(YES)
-#define YES 1
-#endif
-
-#if !defined(FALSE)
-#define FALSE 0
-#endif
-
-#if !defined(TRUE)
-#define TRUE  (!FALSE)
-#endif
 
 /*
  * pk_allowed sets the tone of the entire game.  If pk_allowed is set to
@@ -68,10 +52,10 @@
  * However, if you decide you want to have an all-out knock-down drag-out
  * PK Mud, just set pk_allowed to YES - and anything goes.
  */
-int pk_allowed = YES;
+int pk_allowed = NO;
 
 /* is playerthieving allowed? */
-int pt_allowed = YES;
+int pt_allowed = NO;
 
 /* minimum level a player must be to shout/holler/gossip/auction */
 int level_can_shout = 1;
@@ -146,13 +130,13 @@ int immort_level_ok = 0;
  * Should the MUD allow you to 'rent' for free?  (i.e. if you just quit,
  * your objects are saved at no cost, as in Merc-type MUDs.)
  */
-int free_rent = NO;
+int free_rent = YES;
 
 /* maximum number of items players are allowed to rent */
 int max_obj_save = 30;
 
 /* receptionist's surcharge on top of item costs */
-int min_rent_cost = 10;
+int min_rent_cost = 100;
 
 /*
  * Should the game automatically save people?  (i.e., save player data
@@ -265,7 +249,7 @@ int max_bad_pws = 3;
 int siteok_everyone = TRUE;
 
 /*
- * Some nameservers are very slow and cause the game to lag terribly every
+ * Some nameservers are very slow and cause the game to lag terribly every 
  * time someone logs in.  The lag is caused by the gethostbyaddr() function
  * which is responsible for resolving numeric IP addresses to alphabetic names.
  * Sometimes, nameservers can be so slow that the incredible lag caused by
@@ -282,17 +266,6 @@ int siteok_everyone = TRUE;
 
 int nameserver_is_slow = NO;
 
-/*
- * Will changes save automaticaly in OLC ?
- */
-int auto_save_olc = 1;
-
-/*
- * if you wish to enable Aedit, set this to 1
- * This will make the mud look for a file called socials.new,
- * which is in a different format than the stock socials file.
- */
-int use_new_socials = 0;
 
 const char *MENU =
 "\r\n"

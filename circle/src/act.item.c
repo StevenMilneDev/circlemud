@@ -21,6 +21,13 @@
 #include "spells.h"
 #include "constants.h"
 
+/* extern variables */
+extern room_rnum donation_room_1;
+#if 0
+extern room_rnum donation_room_2;  /* uncomment if needed! */
+extern room_rnum donation_room_3;  /* uncomment if needed! */
+#endif
+
 /* local functions */
 int can_take_obj(struct char_data *ch, struct obj_data *obj);
 void get_check_money(struct char_data *ch, struct obj_data *obj);
@@ -488,7 +495,7 @@ ACMD(do_drop)
   struct obj_data *obj, *next_obj;
   room_rnum RDR = 0;
   byte mode = SCMD_DROP;
-  int dotmode, amount = 0, multi, num_don_rooms;
+  int dotmode, amount = 0, multi;
   const char *sname;
 
   switch (subcmd) {
@@ -499,21 +506,17 @@ ACMD(do_drop)
   case SCMD_DONATE:
     sname = "donate";
     mode = SCMD_DONATE;
-    /* fail + double chance for room 1   */
-    num_don_rooms = (CONFIG_DON_ROOM_1 != NOWHERE) * 2 +       
-                    (CONFIG_DON_ROOM_2 != NOWHERE)     +
-                    (CONFIG_DON_ROOM_3 != NOWHERE)     + 1 ; 
-    switch (rand_number(0, num_don_rooms)) {
+    switch (rand_number(0, 2)) {
     case 0:
       mode = SCMD_JUNK;
       break;
     case 1:
     case 2:
-      RDR = real_room(CONFIG_DON_ROOM_1);
+      RDR = real_room(donation_room_1);
       break;
-    case 3: RDR = real_room(CONFIG_DON_ROOM_2); break;
-    case 4: RDR = real_room(CONFIG_DON_ROOM_3); break;
-
+/*    case 3: RDR = real_room(donation_room_2); break;
+      case 4: RDR = real_room(donation_room_3); break;
+*/
     }
     if (RDR == NOWHERE) {
       send_to_char(ch, "Sorry, you can't donate anything right now.\r\n");
@@ -627,7 +630,7 @@ struct char_data *give_find_vict(struct char_data *ch, char *arg)
   if (!*arg)
     send_to_char(ch, "To who?\r\n");
   else if (!(vict = get_char_vis(ch, arg, NULL, FIND_CHAR_ROOM)))
-    send_to_char(ch, "%s", CONFIG_NOPERSON);
+    send_to_char(ch, "%s", NOPERSON);
   else if (vict == ch)
     send_to_char(ch, "What's the point of that?\r\n");
   else
@@ -650,7 +653,7 @@ void perform_give_gold(struct char_data *ch, struct char_data *vict,
     send_to_char(ch, "You don't have that many coins!\r\n");
     return;
   }
-  send_to_char(ch, "%s", CONFIG_OK);
+  send_to_char(ch, "%s", OK);
 
   snprintf(buf, sizeof(buf), "$n gives you %d gold coin%s.", amount, amount == 1 ? "" : "s");
   act(buf, FALSE, ch, 0, vict, TO_VICT);
@@ -1327,8 +1330,6 @@ ACMD(do_wear)
     }
     if (!(obj = get_obj_in_list_vis(ch, arg1, NULL, ch->carrying)))
       send_to_char(ch, "You don't seem to have any %ss.\r\n", arg1);
-    else if (GET_LEVEL(ch) < GET_OBJ_LEVEL(obj))
-      send_to_char(ch, "You are not experienced enough to use that.\r\n");
     else
       while (obj) {
 	next_obj = get_obj_in_list_vis(ch, arg1, NULL, obj->next_content);

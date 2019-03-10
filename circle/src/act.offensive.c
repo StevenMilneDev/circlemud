@@ -20,6 +20,9 @@
 #include "db.h"
 #include "spells.h"
 
+/* extern variables */
+extern int pk_allowed;
+
 /* extern functions */
 void raw_kill(struct char_data *ch);
 void check_killer(struct char_data *ch, struct char_data *vict);
@@ -51,7 +54,7 @@ ACMD(do_assist)
   if (!*arg)
     send_to_char(ch, "Whom do you wish to assist?\r\n");
   else if (!(helpee = get_char_vis(ch, arg, NULL, FIND_CHAR_ROOM)))
-    send_to_char(ch, "%s", CONFIG_NOPERSON);
+    send_to_char(ch, "%s", NOPERSON);
   else if (helpee == ch)
     send_to_char(ch, "You can't help yourself any more than this!\r\n");
   else {
@@ -70,8 +73,7 @@ ACMD(do_assist)
       act("But nobody is fighting $M!", FALSE, ch, 0, helpee, TO_CHAR);
     else if (!CAN_SEE(ch, opponent))
       act("You can't see who is fighting $M!", FALSE, ch, 0, helpee, TO_CHAR);
-         /* prevent accidental pkill */
-    else if (!CONFIG_PK_ALLOWED && !IS_NPC(opponent))	
+    else if (!pk_allowed && !IS_NPC(opponent))	/* prevent accidental pkill */
       act("Use 'murder' if you really want to attack $N.", FALSE,
 	  ch, 0, opponent, TO_CHAR);
     else {
@@ -101,7 +103,7 @@ ACMD(do_hit)
   } else if (AFF_FLAGGED(ch, AFF_CHARM) && (ch->master == vict))
     act("$N is just such a good friend, you simply can't hit $M.", FALSE, ch, 0, vict, TO_CHAR);
   else {
-    if (!CONFIG_PK_ALLOWED) {
+    if (!pk_allowed) {
       if (!IS_NPC(vict) && !IS_NPC(ch)) {
 	if (subcmd != SCMD_MURDER) {
 	  send_to_char(ch, "Use 'murder' to hit another player.\r\n");
@@ -237,7 +239,7 @@ ACMD(do_order)
       if ((vict->master != ch) || !AFF_FLAGGED(vict, AFF_CHARM))
 	act("$n has an indifferent look.", FALSE, vict, 0, 0, TO_ROOM);
       else {
-	send_to_char(ch, "%s", CONFIG_OK);
+	send_to_char(ch, "%s", OK);
 	command_interpreter(vict, message);
       }
     } else {			/* This is order "followers" */
@@ -254,7 +256,7 @@ ACMD(do_order)
 	  }
       }
       if (found)
-	send_to_char(ch, "%s", CONFIG_OK);
+	send_to_char(ch, "%s", OK);
       else
 	send_to_char(ch, "Nobody here is a loyal subject of yours!\r\n");
     }

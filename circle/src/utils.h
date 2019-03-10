@@ -320,7 +320,6 @@ void	update_pos(struct char_data *victim);
 #define GET_TALK(ch, i)		CHECK_PLAYER_SPECIAL((ch), ((ch)->player_specials->saved.talks[i]))
 #define POOFIN(ch)		CHECK_PLAYER_SPECIAL((ch), ((ch)->player_specials->poofin))
 #define POOFOUT(ch)		CHECK_PLAYER_SPECIAL((ch), ((ch)->player_specials->poofout))
-#define GET_OLC_ZONE(ch)	CHECK_PLAYER_SPECIAL((ch), ((ch)->player_specials->saved.olc_zone))
 #define GET_LAST_OLC_TARG(ch)	CHECK_PLAYER_SPECIAL((ch), ((ch)->player_specials->last_olc_targ))
 #define GET_LAST_OLC_MODE(ch)	CHECK_PLAYER_SPECIAL((ch), ((ch)->player_specials->last_olc_mode))
 #define GET_ALIASES(ch)		CHECK_PLAYER_SPECIAL((ch), ((ch)->player_specials->aliases))
@@ -340,7 +339,7 @@ void	update_pos(struct char_data *victim);
 #define MEMORY(ch)		((ch)->mob_specials.memory)
 
 #define STRENGTH_APPLY_INDEX(ch) \
-        ( ((GET_ADD(ch) ==0) || (GET_STR(ch) != 18)) ? GET_STR(ch) :\
+        ( ((GET_ADD(ch)==0) || (GET_STR(ch) != 18)) ? GET_STR(ch) :\
           (GET_ADD(ch) <= 50) ? 26 :( \
           (GET_ADD(ch) <= 75) ? 27 :( \
           (GET_ADD(ch) <= 90) ? 28 :( \
@@ -371,11 +370,6 @@ void	update_pos(struct char_data *victim);
 /* Hrm, not many.  We should make more. -gg 3/4/99 */
 #define STATE(d)	((d)->connected)
 
-#define IS_PLAYING(d)   (STATE(d) == CON_TEDIT || STATE(d) == CON_REDIT ||      \
-                        STATE(d) == CON_MEDIT || STATE(d) == CON_OEDIT ||       \
-                        STATE(d) == CON_ZEDIT || STATE(d) == CON_SEDIT ||       \
-                        STATE(d) == CON_CEDIT || STATE(d) == CON_PLAYING ||     \
-                        STATE(d) == CON_AEDIT)
 
 /* object utils **********************************************************/
 
@@ -387,8 +381,6 @@ void	update_pos(struct char_data *victim);
 #define VALID_OBJ_RNUM(obj)	(GET_OBJ_RNUM(obj) <= top_of_objt && \
 				 GET_OBJ_RNUM(obj) != NOTHING)
 
-#define GET_OBJ_LEVEL(obj)      ((obj)->obj_flags.level)
-#define GET_OBJ_PERM(obj)       ((obj)->obj_flags.bitvector)
 #define GET_OBJ_TYPE(obj)	((obj)->obj_flags.type_flag)
 #define GET_OBJ_COST(obj)	((obj)->obj_flags.cost)
 #define GET_OBJ_RENT(obj)	((obj)->obj_flags.cost_per_day)
@@ -483,8 +475,6 @@ void	update_pos(struct char_data *victim);
 
 
 #define EXIT(ch, door)  (world[IN_ROOM(ch)].dir_option[door])
-#define W_EXIT(room, num)     (world[(room)].dir_option[(num)])
-#define R_EXIT(room, num)     ((room)->dir_option[(num)])
 
 #define CAN_GO(ch, door) (EXIT(ch,door) && \
 			 (EXIT(ch,door)->to_room != NOWHERE) && \
@@ -521,14 +511,6 @@ void	update_pos(struct char_data *victim);
 #define TRUE  (!FALSE)
 #endif
 
-#if !defined(YES)
-#define YES 1
-#endif
-
-#if !defined(NO)
-#define NO 0
-#endif
-
 /* defines for fseek */
 #ifndef SEEK_SET
 #define SEEK_SET	0
@@ -548,63 +530,3 @@ void	update_pos(struct char_data *victim);
 #define CRYPT(a,b) ((char *) crypt((a),(b)))
 #endif
 
-/*******************  Config macros *********************/
-
-#define CONFIG_CONFFILE         config_info.CONFFILE
-
-#define CONFIG_PK_ALLOWED       config_info.play.pk_allowed
-#define CONFIG_PT_ALLOWED       config_info.play.pt_allowed
-#define CONFIG_LEVEL_CAN_SHOUT  config_info.play.level_can_shout
-#define CONFIG_HOLLER_MOVE_COST config_info.play.holler_move_cost
-#define CONFIG_TUNNEL_SIZE      config_info.play.tunnel_size
-#define CONFIG_MAX_EXP_GAIN     config_info.play.max_exp_gain
-#define CONFIG_MAX_EXP_LOSS     config_info.play.max_exp_loss
-#define CONFIG_MAX_NPC_CORPSE_TIME config_info.play.max_npc_corpse_time
-#define CONFIG_MAX_PC_CORPSE_TIME config_info.play.max_pc_corpse_time
-#define CONFIG_IDLE_VOID        config_info.play.idle_void
-#define CONFIG_IDLE_RENT_TIME   config_info.play.idle_rent_time
-#define CONFIG_IDLE_MAX_LEVEL   config_info.play.idle_max_level
-#define CONFIG_DTS_ARE_DUMPS    config_info.play.dts_are_dumps
-#define CONFIG_LOAD_INVENTORY   config_info.play.load_into_inventory
-#define CONFIG_TRACK_T_DOORS    config_info.play.track_through_doors
-#define CONFIG_IMMORT_LEVEL_OK  config_info.play.immort_level_ok
-#define CONFIG_OK               config_info.play.OK
-#define CONFIG_NOPERSON         config_info.play.NOPERSON
-#define CONFIG_NOEFFECT         config_info.play.NOEFFECT
-
-  /** Crash Saves **/
-#define CONFIG_FREE_RENT        config_info.csd.free_rent
-#define CONFIG_MAX_OBJ_SAVE     config_info.csd.max_obj_save
-#define CONFIG_MIN_RENT_COST    config_info.csd.min_rent_cost
-#define CONFIG_AUTO_SAVE        config_info.csd.auto_save
-#define CONFIG_AUTOSAVE_TIME    config_info.csd.autosave_time
-#define CONFIG_CRASH_TIMEOUT    config_info.csd.crash_file_timeout
-#define CONFIG_RENT_TIMEOUT     config_info.csd.rent_file_timeout
-
-  /** Room Numbers **/
-#define CONFIG_MORTAL_START     config_info.room_nums.mortal_start_room
-#define CONFIG_IMMORTAL_START   config_info.room_nums.immort_start_room
-#define CONFIG_FROZEN_START     config_info.room_nums.frozen_start_room
-#define CONFIG_DON_ROOM_1       config_info.room_nums.donation_room_1
-#define CONFIG_DON_ROOM_2       config_info.room_nums.donation_room_2
-#define CONFIG_DON_ROOM_3       config_info.room_nums.donation_room_3
-
-  /** Game Operation **/
-#define CONFIG_DFLT_PORT        config_info.operation.DFLT_PORT
-#define CONFIG_DFLT_IP          config_info.operation.DFLT_IP
-#define CONFIG_MAX_PLAYING      config_info.operation.max_playing
-#define CONFIG_MAX_FILESIZE     config_info.operation.max_filesize
-#define CONFIG_MAX_BAD_PWS      config_info.operation.max_bad_pws
-#define CONFIG_SITEOK_ALL       config_info.operation.siteok_everyone
-#define CONFIG_OLC_SAVE         config_info.operation.auto_save_olc
-#define CONFIG_NEW_SOCIALS      config_info.operation.use_new_socials
-#define CONFIG_NS_IS_SLOW       config_info.operation.nameserver_is_slow
-#define CONFIG_DFLT_DIR         config_info.operation.DFLT_DIR
-#define CONFIG_LOGNAME          config_info.operation.LOGNAME
-#define CONFIG_MENU             config_info.operation.MENU
-#define CONFIG_WELC_MESSG       config_info.operation.WELC_MESSG
-#define CONFIG_START_MESSG      config_info.operation.START_MESSG
-
-  /** Autowiz **/
-#define CONFIG_USE_AUTOWIZ      config_info.autowiz.use_autowiz
-#define CONFIG_MIN_WIZLIST_LEV  config_info.autowiz.min_wizlist_lev

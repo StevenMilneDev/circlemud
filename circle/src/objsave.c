@@ -30,6 +30,10 @@
 /* external variables */
 extern struct player_index_element *player_table;
 extern int top_of_p_table;
+extern int rent_file_timeout, crash_file_timeout;
+extern int free_rent;
+extern int min_rent_cost;
+extern int max_obj_save;	/* change in config.c */
 
 /* Extern functions */
 ACMD(do_action);
@@ -293,7 +297,7 @@ int Crash_clean_file(char *name)
 
   if ((rent.rentcode == RENT_CRASH) ||
       (rent.rentcode == RENT_FORCED) || (rent.rentcode == RENT_TIMEDOUT)) {
-    if (rent.time < time(0) - (CONFIG_CRASH_TIMEOUT * SECS_PER_REAL_DAY)) {
+    if (rent.time < time(0) - (crash_file_timeout * SECS_PER_REAL_DAY)) {
       const char *filetype;
 
       Crash_delete_file(name);
@@ -316,7 +320,7 @@ int Crash_clean_file(char *name)
     }
     /* Must retrieve rented items w/in 30 days */
   } else if (rent.rentcode == RENT_RENTED)
-    if (rent.time < time(0) - (CONFIG_RENT_TIMEOUT * SECS_PER_REAL_DAY)) {
+    if (rent.time < time(0) - (rent_file_timeout * SECS_PER_REAL_DAY)) {
       Crash_delete_file(name);
       log("    Deleting %s's rent file.", name);
       return (1);
@@ -601,7 +605,7 @@ int Crash_load(struct char_data *ch)
 
   /* Little hoarding check. -gg 3/1/98 */
   mudlog(NRM, MAX(GET_INVIS_LEV(ch), LVL_GOD), TRUE, "%s (level %d) has %d object%s (max %d).",
-	GET_NAME(ch), GET_LEVEL(ch), num_objs, num_objs != 1 ? "s" : "", CONFIG_MAX_OBJ_SAVE);
+	GET_NAME(ch), GET_LEVEL(ch), num_objs, num_objs != 1 ? "s" : "", max_obj_save);
 
   /* turn this into a crash file by re-writing the control block */
   rent.rentcode = RENT_CRASH;
@@ -1016,7 +1020,7 @@ int Crash_offer_rent(struct char_data *ch, struct char_data *recep,
   if (norent)
     return (0);
 
-  totalcost = CONFIG_MIN_RENT_COST * factor;
+  totalcost = min_rent_cost * factor;
 
   Crash_report_rent(ch, recep, ch->carrying, &totalcost, &numitems, display, factor);
 
@@ -1028,17 +1032,17 @@ int Crash_offer_rent(struct char_data *ch, struct char_data *recep,
 	FALSE, recep, 0, ch, TO_VICT);
     return (0);
   }
-  if (numitems > CONFIG_MAX_OBJ_SAVE) {
+  if (numitems > max_obj_save) {
     char buf[256];
 
-    snprintf(buf, sizeof(buf), "$n tells you, 'Sorry, but I cannot store more than %d items.'", CONFIG_MAX_OBJ_SAVE);
+    snprintf(buf, sizeof(buf), "$n tells you, 'Sorry, but I cannot store more than %d items.'", max_obj_save);
     act(buf, FALSE, recep, 0, ch, TO_VICT);
     return (0);
   }
   if (display) {
     char buf[256];
 
-    snprintf(buf, sizeof(buf), "$n tells you, 'Plus, my %d coin fee..'", CONFIG_MIN_RENT_COST * factor);
+    snprintf(buf, sizeof(buf), "$n tells you, 'Plus, my %d coin fee..'", min_rent_cost * factor);
     act(buf, FALSE, recep, 0, ch, TO_VICT);
 
     snprintf(buf, sizeof(buf), "$n tells you, 'For a total of %ld coins%s.'", totalcost, factor == RENT_FACTOR ? " per day" : "");
@@ -1083,7 +1087,7 @@ int gen_receptionist(struct char_data *ch, struct char_data *recep,
     return (TRUE);
   }
 
-  if (CONFIG_FREE_RENT) {
+  if (free_rent) {
     act("$n tells you, 'Rent is free here.  Just quit, and your objects will be saved!'",
 	FALSE, recep, 0, ch, TO_VICT);
     return (1);

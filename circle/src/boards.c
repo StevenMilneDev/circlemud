@@ -55,7 +55,6 @@ TO ADD A NEW BOARD, simply follow our easy 4-step program:
 #include "boards.h"
 #include "interpreter.h"
 #include "handler.h"
-#include "improved-edit.h"
 
 /* Board appearance order. */
 #define	NEWEST_AT_TOP	FALSE
@@ -141,6 +140,11 @@ void init_boards(void)
     Board_load_board(i);
   }
 
+  ACMD_READ = find_command("read");
+  ACMD_WRITE = find_command("write");
+  ACMD_REMOVE = find_command("remove");
+  ACMD_LOOK = find_command("look");
+  ACMD_EXAMINE = find_command("examine");
 
   if (fatal_error)
     exit(1);
@@ -159,12 +163,6 @@ SPECIAL(gen_board)
   }
   if (!ch->desc)
     return (0);
-
-  ACMD_READ = find_command("read");
-  ACMD_WRITE = find_command("write");
-  ACMD_REMOVE = find_command("remove");
-  ACMD_LOOK = find_command("look");
-  ACMD_EXAMINE = find_command("examine");
 
   if (cmd != ACMD_WRITE && cmd != ACMD_LOOK && cmd != ACMD_EXAMINE &&
       cmd != ACMD_READ && cmd != ACMD_REMOVE)
@@ -226,8 +224,7 @@ int Board_write_message(int board_type, struct char_data *ch, char *arg, struct 
   NEW_MSG_INDEX(board_type).heading = strdup(buf);
   NEW_MSG_INDEX(board_type).level = GET_LEVEL(ch);
 
-  send_to_char(ch, "Write your message.\r\n");
-  send_editor_help(ch->desc);
+  send_to_char(ch, "Write your message.  Terminate with a @ on a new line.\r\n\r\n");
   act("$n starts to write a message.", TRUE, ch, 0, 0, TO_ROOM);
 
   string_write(ch->desc, &(msg_storage[NEW_MSG_INDEX(board_type).slot_num]),
@@ -419,6 +416,9 @@ int Board_remove_msg(int board_type, struct char_data *ch, char *arg, struct obj
     MSG_SLOTNUM(board_type, ind) = MSG_SLOTNUM(board_type, ind + 1);
     MSG_LEVEL(board_type, ind) = MSG_LEVEL(board_type, ind + 1);
   }
+  MSG_HEADING(board_type, num_of_msgs[board_type] - 1) = NULL;
+  MSG_SLOTNUM(board_type, num_of_msgs[board_type] - 1) = 0;
+  MSG_LEVEL(board_type, num_of_msgs[board_type] - 1) = 0;
   num_of_msgs[board_type]--;
 
   send_to_char(ch, "Message removed.\r\n");

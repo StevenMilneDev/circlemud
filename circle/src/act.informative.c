@@ -1026,7 +1026,7 @@ ACMD(do_who)
   send_to_char(ch, "Players\r\n-------\r\n");
 
   for (d = descriptor_list; d; d = d->next) {
-    if (!IS_PLAYING(d))
+    if (STATE(d) != CON_PLAYING)
       continue;
 
     if (d->original)
@@ -1070,33 +1070,8 @@ ACMD(do_who)
 
       if (PLR_FLAGGED(tch, PLR_MAILING))
 	send_to_char(ch, " (mailing)");
-      else if (d->olc)
-	send_to_char(ch, " (OLC)");
       else if (PLR_FLAGGED(tch, PLR_WRITING))
 	send_to_char(ch, " (writing)");
-
-      if (d->original)
-        send_to_char(ch, " (out of body)");
-       
-      if (d->connected == CON_OEDIT)
-        send_to_char(ch, " (Object Edit)");
-      if (d->connected == CON_MEDIT)
-        send_to_char(ch, " (Mobile Edit)");
-      if (d->connected == CON_ZEDIT)
-        send_to_char(ch, " (Zone Edit)");
-      if (d->connected == CON_SEDIT)
-        send_to_char(ch, " (Shop Edit)");
-      if (d->connected == CON_REDIT)
-        send_to_char(ch, " (Room Edit)");
-      if (d->connected == CON_TEDIT)
-        send_to_char(ch, " (Text Edit)");
-      if (d->connected == CON_AEDIT)
-        send_to_char(ch, " (Social Edit)");
-      if (d->connected == CON_CEDIT)
-        send_to_char(ch, " (Configuration Edit)");
-
-      if (PRF_FLAGGED(tch, PRF_BUILDWALK))
-	send_to_char(ch, " (Buildwalking)");
 
       if (PRF_FLAGGED(tch, PRF_DEAF))
 	send_to_char(ch, " (deaf)");
@@ -1202,7 +1177,7 @@ ACMD(do_users)
       continue;
     if (STATE(d) == CON_PLAYING && deadweight)
       continue;
-    if (IS_PLAYING(d)) {
+    if (STATE(d) == CON_PLAYING) {
       if (d->original)
 	tch = d->original;
       else if (!(tch = d->character))
@@ -1308,7 +1283,6 @@ ACMD(do_gen_ps)
     break;
   case SCMD_VERSION:
     send_to_char(ch, "%s\r\n", circlemud_version);
-    send_to_char(ch, "%s\r\n", oasisolc_version);
     break;
   case SCMD_WHOAMI:
     send_to_char(ch, "%s\r\n", GET_NAME(ch));
@@ -1435,7 +1409,8 @@ ACMD(do_where)
 ACMD(do_levels)
 {
   char buf[MAX_STRING_LENGTH];
-  size_t i, len = 0, nlen;
+  size_t i, len = 0;
+  int nlen;
 
   if (IS_NPC(ch)) {
     send_to_char(ch, "You ain't nothin' but a hound-dog.\r\n");
@@ -1531,7 +1506,7 @@ ACMD(do_diagnose)
 
   if (*buf) {
     if (!(vict = get_char_vis(ch, buf, NULL, FIND_CHAR_ROOM)))
-      send_to_char(ch, "%s", CONFIG_NOPERSON);
+      send_to_char(ch, "%s", NOPERSON);
     else
       diag_char_to_char(vict, ch);
   } else {
@@ -1585,14 +1560,6 @@ ACMD(do_toggle)
     sprintf(buf2, "%-3.3d", GET_WIMP_LEV(ch));	/* sprintf: OK */
 
   if (GET_LEVEL(ch) >= LVL_IMMORT) {
-    send_to_char(ch,
-          "      Buildwalk: %-3s    "
-          "Clear Screen in OLC: %-3s\r\n",
-        ONOFF(PRF_FLAGGED(ch, PRF_BUILDWALK)),
-        ONOFF(PRF_FLAGGED(ch, PRF_CLS))
-    );
-
-    
     send_to_char(ch,
 	  "      No Hassle: %-3s    "
 	  "      Holylight: %-3s    "
@@ -1652,8 +1619,7 @@ ACMD(do_toggle)
 
 int sort_commands_helper(const void *a, const void *b)
 {
-  return strcmp(complete_cmd_info[*(const int *)a].sort_as, 
-                complete_cmd_info[*(const int *)b].sort_as);
+  return strcmp(cmd_info[*(const int *)a].command, cmd_info[*(const int *)b].command);
 }
 
 
@@ -1661,7 +1627,7 @@ void sort_commands(void)
 {
   int a, num_of_cmds = 0;
 
-  while (complete_cmd_info[num_of_cmds].command[0] != '\n')
+  while (cmd_info[num_of_cmds].command[0] != '\n')
     num_of_cmds++;
   num_of_cmds++;	/* \n */
 
@@ -1707,19 +1673,19 @@ ACMD(do_commands)
 	  vict == ch ? "you" : GET_NAME(vict));
 
   /* cmd_num starts at 1, not 0, to remove 'RESERVED' */
-  for (no = 1, cmd_num = 1; complete_cmd_info[cmd_sort_info[cmd_num]].command[0] != '\n'; cmd_num++) {
+  for (no = 1, cmd_num = 1; cmd_info[cmd_sort_info[cmd_num]].command[0] != '\n'; cmd_num++) {
     i = cmd_sort_info[cmd_num];
 
-    if (complete_cmd_info[i].minimum_level < 0 || GET_LEVEL(vict) < complete_cmd_info[i].minimum_level)
+    if (cmd_info[i].minimum_level < 0 || GET_LEVEL(vict) < cmd_info[i].minimum_level)
       continue;
 
-    if ((complete_cmd_info[i].minimum_level >= LVL_IMMORT) != wizhelp)
+    if ((cmd_info[i].minimum_level >= LVL_IMMORT) != wizhelp)
       continue;
 
-    if (!wizhelp && socials != (complete_cmd_info[i].command_pointer == do_action || complete_cmd_info[i].command_pointer == do_insult))
+    if (!wizhelp && socials != (cmd_info[i].command_pointer == do_action || cmd_info[i].command_pointer == do_insult))
       continue;
 
-    send_to_char(ch, "%-11s%s", complete_cmd_info[i].command, no++ % 7 == 0 ? "\r\n" : "");
+    send_to_char(ch, "%-11s%s", cmd_info[i].command, no++ % 7 == 0 ? "\r\n" : "");
   }
 
   if (no % 7 != 1)

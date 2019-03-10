@@ -27,7 +27,7 @@
  * for CircleMUD to be complete but we refuse to break binary file
  * compatibility.
  */
-#define USE_AUTOEQ	1	/* TRUE/FALSE aren't defined yet. */
+#define USE_AUTOEQ	0	/* TRUE/FALSE aren't defined yet. */
 
 
 /* preamble *************************************************************/
@@ -214,9 +214,7 @@
 #define PRF_NOGOSS	(1 << 19) /* Can't hear gossip channel		*/
 #define PRF_NOGRATZ	(1 << 20) /* Can't hear grats channel		*/
 #define PRF_ROOMFLAGS	(1 << 21) /* Can see room flags (ROOM_x)	*/
-#define PRF_DISPAUTO	(1 << 22) /* Show prompt HP, MP, MV when < 25%.	*/
-#define PRF_CLS         (1 << 23) /* Clear screen in OLC                */
-#define PRF_BUILDWALK   (1 << 24) /* Build new rooms while walking ?    */
+#define PRF_DISPAUTO	(1 << 22) /* Show prompt HP, MP, MV when < 30%.	*/
 
 /* Affect bits: used in char_data.char_specials.saved.affected_by */
 /* WARNING: In the world files, NEVER set the bits marked "R" ("Reserved") */
@@ -263,14 +261,6 @@
 #define CON_DELCNF1	 15	/* Delete confirmation 1		*/
 #define CON_DELCNF2	 16	/* Delete confirmation 2		*/
 #define CON_DISCONNECT	 17	/* In-game link loss (leave character)	*/
-#define CON_OEDIT	 18	/* OLC mode - object editor		*/
-#define CON_REDIT	 19	/* OLC mode - room editor		*/
-#define CON_ZEDIT	 20	/* OLC mode - zone info editor		*/
-#define CON_MEDIT	 21	/* OLC mode - mobile editor		*/
-#define CON_SEDIT	 22	/* OLC mode - shop editor		*/
-#define CON_TEDIT	 23	/* OLC mode - text editor		*/
-#define CON_CEDIT	 24	/* OLC mode - conf editor		*/
-#define CON_AEDIT        25     /* OLC mode - social (action) edit      */
 
 /* Character equipment positions: used as index for char_data.equipment[] */
 /* NOTE: Don't confuse these constants with the ITEM_ bitvectors
@@ -467,9 +457,6 @@
 #define LVL_GOD		32
 #define LVL_IMMORT	31
 
-/* Builders that have access to the saveall command */
-#define LVL_BUILDER	LVL_GRGOD
-
 /* Level of the 'freeze' command */
 #define LVL_FREEZE	LVL_GRGOD
 
@@ -506,7 +493,7 @@
 #define LARGE_BUFSIZE	   (MAX_SOCK_BUF - GARBAGE_SPACE - MAX_PROMPT_LENGTH)
 
 #define HISTORY_SIZE		5	/* Keep last 5 commands. */
-#define MAX_STRING_LENGTH	16384   
+#define MAX_STRING_LENGTH	8192
 #define MAX_INPUT_LENGTH	256	/* Max length per *line* of input */
 #define MAX_RAW_INPUT_LENGTH	512	/* Max size of *raw* input */
 #define MAX_MESSAGES		60
@@ -587,12 +574,11 @@ struct extra_descr_data {
 
 /* object-related structures ******************************************/
 
-#define NUM_OBJ_VAL_POSITIONS 4
+
 /* object flags; used in obj_data */
 struct obj_flag_data {
-   int	value[NUM_OBJ_VAL_POSITIONS];	/* Values of the item (see list)    */
+   int	value[4];	/* Values of the item (see list)    */
    byte type_flag;	/* Type of item			    */
-   int level;		/* Minimum level of object.		*/
    int /*bitvector_t*/	wear_flags;	/* Where you can wear it	    */
    int /*bitvector_t*/	extra_flags;	/* If it hums, glows, etc.	    */
    int	weight;		/* Weigt what else                  */
@@ -644,7 +630,7 @@ struct obj_file_elem {
 #if USE_AUTOEQ
    sh_int location;
 #endif
-   int	value[NUM_OBJ_VAL_POSITIONS];
+   int	value[4];
    int /*bitvector_t*/	extra_flags;
    int	weight;
    int	timer;
@@ -848,7 +834,7 @@ struct player_special_data_saved {
    ubyte spare4;
    ubyte spare5;
    int spells_to_learn;		/* How many can you learn yet this level*/
-   int olc_zone;
+   int spare7;
    int spare8;
    int spare9;
    int spare10;
@@ -1004,8 +990,7 @@ struct descriptor_data {
    int  showstr_count;		/* number of pages to page through	*/
    int  showstr_page;		/* which page are we currently showing?	*/
    char	**str;			/* for the modify-str system		*/
-   char *backstr;		/* backup string for modify-str system	*/
-   size_t max_str;	        /* maximum size of string in modify-str	*/
+   size_t max_str;	        /*		-			*/
    long	mail_to;		/* name for mail system			*/
    int	has_prompt;		/* is the user at a prompt?             */
    char	inbuf[MAX_RAW_INPUT_LENGTH];  /* buffer for raw input		*/
@@ -1023,7 +1008,6 @@ struct descriptor_data {
    struct descriptor_data *snooping; /* Who is this char snooping	*/
    struct descriptor_data *snoop_by; /* And who is snooping this char	*/
    struct descriptor_data *next; /* link to next descriptor		*/
-   struct oasis_olc_data *olc;   /* OLC info                            */
 };
 
 
@@ -1052,42 +1036,6 @@ struct message_list {
    struct message_type *msg;	/* List of messages.			*/
 };
 
-/* used in the socials */
-struct social_messg {
-  int act_nr;
-  char *command;               /* holds copy of activating command */
-  char *sort_as;              /* holds a copy of a similar command or
-                               * abbreviation to sort by for the parser */
-  int hide;                   /* ? */
-  int min_victim_position;    /* Position of victim */
-  int min_char_position;      /* Position of char */
-  int min_level_char;          /* Minimum level of socialing char */
-
-  /* No argument was supplied */
-  char *char_no_arg;
-  char *others_no_arg;
-
-  /* An argument was there, and a victim was found */
-  char *char_found;
-  char *others_found;
-  char *vict_found;
-
-  /* An argument was there, as well as a body part, and a victim was found */
-  char *char_body_found;
-  char *others_body_found;
-  char *vict_body_found;
-
-  /* An argument was there, but no victim was found */
-  char *not_found;
-
-  /* The victim turned out to be the character */
-  char *char_auto;
-  char *others_auto;
-
-  /* If the char cant be found search the char's inven and do these: */
-  char *char_obj_found;
-  char *others_obj_found;
-};
 
 struct dex_skill_type {
    sh_int p_pocket;
@@ -1153,105 +1101,3 @@ struct guild_info_type {
   room_vnum guild_room;
   int direction;
 };
-
-/*
- * Config structs
- * 
- */
- 
- /*
- * The game configuration structure used for configurating the game play 
- * variables.
- */
-struct game_data {
-  int pk_allowed;         /* Is player killing allowed? 	  */
-  int pt_allowed;         /* Is player thieving allowed?	  */
-  int level_can_shout;	  /* Level player must be to shout.	  */
-  int holler_move_cost;	  /* Cost to holler in move points.	  */
-  int tunnel_size;        /* Number of people allowed in a tunnel.*/
-  int max_exp_gain;       /* Maximum experience gainable per kill.*/
-  int max_exp_loss;       /* Maximum experience losable per death.*/
-  int max_npc_corpse_time;/* Num tics before NPC corpses decompose*/
-  int max_pc_corpse_time; /* Num tics before PC corpse decomposes.*/
-  int idle_void;          /* Num tics before PC sent to void(idle)*/
-  int idle_rent_time;     /* Num tics before PC is autorented.	  */
-  int idle_max_level;     /* Level of players immune to idle.     */
-  int dts_are_dumps;      /* Should items in dt's be junked?	  */
-  int load_into_inventory;/* Objects load in immortals inventory. */
-  int track_through_doors;/* Track through doors while closed?    */
-  int immort_level_ok;    /* Automatically level mortals to imm?  */
-  
-  char *OK;               /* When player receives 'Okay.' text.	  */
-  char *NOPERSON;         /* 'No-one by that name here.'	  */
-  char *NOEFFECT;         /* 'Nothing seems to happen.'	          */
-};
-
-
-
-/*
- * The rent and crashsave options.
- */
-struct crash_save_data {
-  int free_rent;          /* Should the MUD allow rent for free?  */
-  int max_obj_save;       /* Max items players can rent.          */
-  int min_rent_cost;      /* surcharge on top of item costs.	  */
-  int auto_save;          /* Does the game automatically save ppl?*/
-  int autosave_time;      /* if auto_save=TRUE, how often?        */
-  int crash_file_timeout; /* Life of crashfiles and idlesaves.    */
-  int rent_file_timeout;  /* Lifetime of normal rent files in days*/
-};
-
-
-/*
- * The room numbers. 
- */
-struct room_numbers {
-  room_vnum mortal_start_room;	/* vnum of room that mortals enter at.  */
-  room_vnum immort_start_room;  /* vnum of room that immorts enter at.  */
-  room_vnum frozen_start_room;  /* vnum of room that frozen ppl enter.  */
-  room_vnum donation_room_1;    /* vnum of donation room #1.            */
-  room_vnum donation_room_2;    /* vnum of donation room #2.            */
-  room_vnum donation_room_3;    /* vnum of donation room #3.	        */
-};
-
-
-/*
- * The game operational constants.
- */
-struct game_operation {
-  ush_int DFLT_PORT;        /* The default port to run the game.  */
-  char *DFLT_IP;            /* Bind to all interfaces.		  */
-  char *DFLT_DIR;           /* The default directory (lib).	  */
-  char *LOGNAME;            /* The file to log messages to.	  */
-  int max_playing;          /* Maximum number of players allowed. */
-  int max_filesize;         /* Maximum size of misc files.	  */
-  int max_bad_pws;          /* Maximum number of pword attempts.  */
-  int siteok_everyone;	    /* Everyone from all sites are SITEOK.*/
-  int nameserver_is_slow;   /* Is the nameserver slow or fast?	  */
-  int use_new_socials;      /* Use new or old socials file ?      */
-  int auto_save_olc;        /* Does OLC save to disk right away ? */
-  char *MENU;               /* The MAIN MENU.			  */
-  char *WELC_MESSG;	    /* The welcome message.		  */
-  char *START_MESSG;        /* The start msg for new characters.  */
-};
-
-/*
- * The Autowizard options.
- */
-struct autowiz_data {
-  int use_autowiz;        /* Use the autowiz feature?		*/
-  int min_wizlist_lev;    /* Minimun level to show on wizlist.	*/
-};
-
-/*
- * The main configuration structure;
- */
-struct config_data {
-  char                   *CONFFILE;	/* config file path	 */
-  struct game_data       play;		/* play related config   */
-  struct crash_save_data csd;		/* rent and save related */
-  struct room_numbers    room_nums;	/* room numbers          */
-  struct game_operation  operation;	/* basic operation       */
-  struct autowiz_data    autowiz;	/* autowiz related stuff */
-};
-

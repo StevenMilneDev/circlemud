@@ -19,7 +19,10 @@
 #include "handler.h"
 #include "db.h"
 #include "screen.h"
-#include "improved-edit.h"
+
+/* extern variables */
+extern int level_can_shout;
+extern int holler_move_cost;
 
 /* local functions */
 void perform_tell(struct char_data *ch, struct char_data *vict, char *arg);
@@ -48,7 +51,7 @@ ACMD(do_say)
     act(buf, FALSE, ch, 0, 0, TO_ROOM);
 
     if (!IS_NPC(ch) && PRF_FLAGGED(ch, PRF_NOREPEAT))
-      send_to_char(ch, "%s", CONFIG_OK);
+      send_to_char(ch, "%s", OK);
     else {
       delete_doubledollar(argument);
       send_to_char(ch, "You say, '%s'\r\n", argument);
@@ -87,7 +90,7 @@ ACMD(do_gsay)
 	act(buf, FALSE, ch, 0, f->follower, TO_VICT | TO_SLEEP);
 
     if (PRF_FLAGGED(ch, PRF_NOREPEAT))
-      send_to_char(ch, "%s", CONFIG_OK);
+      send_to_char(ch, "%s", OK);
     else
       send_to_char(ch, "You tell the group, '%s'\r\n", argument);
   }
@@ -104,7 +107,7 @@ void perform_tell(struct char_data *ch, struct char_data *vict, char *arg)
   send_to_char(vict, "%s", CCNRM(vict, C_NRM));
 
   if (!IS_NPC(ch) && PRF_FLAGGED(ch, PRF_NOREPEAT))
-    send_to_char(ch, "%s", CONFIG_OK);
+    send_to_char(ch, "%s", OK);
   else {
     send_to_char(ch, "%s", CCRED(ch, C_CMP));
     snprintf(buf, sizeof(buf), "You tell $N, '%s'", arg);
@@ -150,9 +153,9 @@ ACMD(do_tell)
   if (!*buf || !*buf2)
     send_to_char(ch, "Who do you wish to tell what??\r\n");
   else if (GET_LEVEL(ch) < LVL_IMMORT && !(vict = get_player_vis(ch, buf, NULL, FIND_CHAR_WORLD)))
-    send_to_char(ch, "%s", CONFIG_NOPERSON);
+    send_to_char(ch, "%s", NOPERSON);
   else if (GET_LEVEL(ch) >= LVL_IMMORT && !(vict = get_char_vis(ch, buf, NULL, FIND_CHAR_WORLD)))
-    send_to_char(ch, "%s", CONFIG_NOPERSON);
+    send_to_char(ch, "%s", NOPERSON);
   else if (is_tell_ok(ch, vict))
     perform_tell(ch, vict, buf2);
 }
@@ -226,7 +229,7 @@ ACMD(do_spec_comm)
   if (!*buf || !*buf2)
     send_to_char(ch, "Whom do you want to %s.. and what??\r\n", action_sing);
   else if (!(vict = get_char_vis(ch, buf, NULL, FIND_CHAR_ROOM)))
-    send_to_char(ch, "%s", CONFIG_NOPERSON);
+    send_to_char(ch, "%s", NOPERSON);
   else if (vict == ch)
     send_to_char(ch, "You can't get your mouth close enough to your ear...\r\n");
   else {
@@ -236,7 +239,7 @@ ACMD(do_spec_comm)
     act(buf1, FALSE, ch, 0, vict, TO_VICT);
 
     if (PRF_FLAGGED(ch, PRF_NOREPEAT))
-      send_to_char(ch, "%s", CONFIG_OK);
+      send_to_char(ch, "%s", OK);
     else
       send_to_char(ch, "You %s %s, '%s'\r\n", action_sing, GET_NAME(vict), buf2);
     act(action_others, FALSE, ch, 0, vict, TO_NOTVICT);
@@ -308,20 +311,13 @@ ACMD(do_write)
     act("$p is no good for writing with.", FALSE, ch, pen, 0, TO_CHAR);
   else if (GET_OBJ_TYPE(paper) != ITEM_NOTE)
     act("You can't write on $p.", FALSE, ch, paper, 0, TO_CHAR);
+  else if (paper->action_description)
+    send_to_char(ch, "There's something written on it already.\r\n");
   else {
-    char *backstr = NULL;
- 
-    /* Something on it, display it as that's in input buffer. */
-    if (paper->action_description) {
-      backstr = strdup(paper->action_description);
-      send_to_char(ch, "There's something written on it already:\r\n");
-      send_to_char(ch, "%s", paper->action_description);
-    }
- 
     /* we can write - hooray! */
+    send_to_char(ch, "Write your note.  End with '@' on a new line.\r\n");
     act("$n begins to jot down a note.", TRUE, ch, 0, 0, TO_ROOM);
-    send_editor_help(ch->desc);
-    string_write(ch->desc, &paper->action_description, MAX_NOTE_LENGTH, 0, backstr);
+    string_write(ch->desc, &paper->action_description, MAX_NOTE_LENGTH, 0, NULL);
   }
 }
 
@@ -355,7 +351,7 @@ ACMD(do_page)
     if ((vict = get_char_vis(ch, arg, NULL, FIND_CHAR_WORLD)) != NULL) {
       act(buf, FALSE, ch, 0, vict, TO_VICT);
       if (PRF_FLAGGED(ch, PRF_NOREPEAT))
-	send_to_char(ch, "%s", CONFIG_OK);
+	send_to_char(ch, "%s", OK);
       else
 	act(buf, FALSE, ch, 0, vict, TO_CHAR);
     } else
@@ -430,8 +426,8 @@ ACMD(do_gen_comm)
     return;
   }
   /* level_can_shout defined in config.c */
-  if (GET_LEVEL(ch) < CONFIG_LEVEL_CAN_SHOUT) {
-    send_to_char(ch, "You must be at least level %d before you can %s.\r\n", CONFIG_LEVEL_CAN_SHOUT, com_msgs[subcmd][1]);
+  if (GET_LEVEL(ch) < level_can_shout) {
+    send_to_char(ch, "You must be at least level %d before you can %s.\r\n", level_can_shout, com_msgs[subcmd][1]);
     return;
   }
   /* make sure the char is on the channel */
@@ -448,20 +444,20 @@ ACMD(do_gen_comm)
     return;
   }
   if (subcmd == SCMD_HOLLER) {
-    if (GET_MOVE(ch) < CONFIG_HOLLER_MOVE_COST) {
+    if (GET_MOVE(ch) < holler_move_cost) {
       send_to_char(ch, "You're too exhausted to holler.\r\n");
       return;
     } else
-      GET_MOVE(ch) -= CONFIG_HOLLER_MOVE_COST;
+      GET_MOVE(ch) -= holler_move_cost;
   }
   /* set up the color on code */
   strlcpy(color_on, com_msgs[subcmd][3], sizeof(color_on));
 
   /* first, set up strings to be given to the communicator */
   if (PRF_FLAGGED(ch, PRF_NOREPEAT))
-    send_to_char(ch, "%s", CONFIG_OK);
+    send_to_char(ch, "%s", OK);
   else
-    send_to_char(ch, "%sYou %s, '%s'%s", COLOR_LEV(ch) >= C_CMP ? color_on : "", com_msgs[subcmd][1], argument, CCNRM(ch, C_CMP));
+    send_to_char(ch, "%sYou %s, '%s'%s\r\n", COLOR_LEV(ch) >= C_CMP ? color_on : "", com_msgs[subcmd][1], argument, CCNRM(ch, C_CMP));
 
   snprintf(buf1, sizeof(buf1), "$n %ss, '%s'", com_msgs[subcmd][1], argument);
 
@@ -502,7 +498,7 @@ ACMD(do_qcomm)
     struct descriptor_data *i;
 
     if (PRF_FLAGGED(ch, PRF_NOREPEAT))
-      send_to_char(ch, "%s", CONFIG_OK);
+      send_to_char(ch, "%s", OK);
     else if (subcmd == SCMD_QSAY) {
       snprintf(buf, sizeof(buf), "You quest-say, '%s'", argument);
       act(buf, FALSE, ch, 0, argument, TO_CHAR);

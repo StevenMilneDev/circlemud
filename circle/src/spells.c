@@ -25,6 +25,7 @@
 /* external variables */
 extern room_rnum r_mortal_start_room;
 extern int mini_mud;
+extern int pk_allowed;
 
 /* external functions */
 void clearMemory(struct char_data *ch);
@@ -111,7 +112,7 @@ ASPELL(spell_summon)
     return;
   }
 
-  if (!CONFIG_PK_ALLOWED) {
+  if (!pk_allowed) {
     if (MOB_FLAGGED(victim, MOB_AGGRESSIVE)) {
       act("As the words escape your lips and $N travels\r\n"
 	  "through time and space towards you, you realize that $E is\r\n"
@@ -212,7 +213,7 @@ ASPELL(spell_charm)
   else if (AFF_FLAGGED(victim, AFF_CHARM) || level < GET_LEVEL(victim))
     send_to_char(ch, "You fail.\r\n");
   /* player charming another player - no legal reason for this */
-  else if (!CONFIG_PK_ALLOWED && !IS_NPC(victim))
+  else if (!pk_allowed && !IS_NPC(victim))
     send_to_char(ch, "You fail - shouldn't be doing it anyway.\r\n");
   else if (circle_follow(victim, ch))
     send_to_char(ch, "Sorry, following in circles can not be allowed.\r\n");
@@ -262,8 +263,7 @@ ASPELL(spell_identify)
     sprintbit(GET_OBJ_EXTRA(obj), extra_bits, bitbuf, sizeof(bitbuf));
     send_to_char(ch, "Item is: %s\r\n", bitbuf);
 
-    send_to_char(ch, "Weight: %d, Value: %d, Rent: %d, Min. level: %d\r\n",
-                     GET_OBJ_WEIGHT(obj), GET_OBJ_COST(obj), GET_OBJ_RENT(obj), GET_OBJ_LEVEL(obj));
+    send_to_char(ch, "Weight: %d, Value: %d, Rent: %d\r\n", GET_OBJ_WEIGHT(obj), GET_OBJ_COST(obj), GET_OBJ_RENT(obj));
 
     switch (GET_OBJ_TYPE(obj)) {
     case ITEM_SCROLL:

@@ -13,9 +13,9 @@
 
 ACMD(do_move);
 
-#define CMD_NAME (complete_cmd_info[cmd].command)
-#define CMD_IS(cmd_name) (!strcmp(cmd_name, complete_cmd_info[cmd].command))
-#define IS_MOVE(cmdnum) (complete_cmd_info[cmdnum].command_pointer == do_move)
+#define CMD_NAME (cmd_info[cmd].command)
+#define CMD_IS(cmd_name) (!strcmp(cmd_name, cmd_info[cmd].command))
+#define IS_MOVE(cmdnum) (cmd_info[cmdnum].command_pointer == do_move)
 
 void	command_interpreter(struct char_data *ch, char *argument);
 int	search_block(char *arg, const char **list, int exact);
@@ -33,19 +33,12 @@ int	find_command(const char *command);
 void	skip_spaces(char **string);
 char	*delete_doubledollar(char *string);
 
-/* WARNING: if you have added diagonal directions and have them at the
- * beginning of the command list.. change this value to 11 or 15 (depending) */
-/* reserve these commands to come straight from the cmd list then start
- * sorting */
-#define RESERVE_CMDS                7
-
 /* for compatibility with 2.20: */
 #define argument_interpreter(a, b, c) two_arguments(a, b, c)
 
 
 struct command_info {
    const char *command;
-   const char *sort_as;
    byte minimum_position;
    void	(*command_pointer)
 	   (struct char_data *ch, char *argument, int cmd, int subcmd);
@@ -58,7 +51,7 @@ struct command_info {
  * so it has been moved down here.
  */
 #ifndef __INTERPRETER_C__
-extern struct command_info *complete_cmd_info;
+extern const struct command_info cmd_info[];
 #endif
 
 /*
@@ -126,8 +119,6 @@ struct alias_data {
 #define SCMD_SLOWNS	14
 #define SCMD_AUTOEXIT	15
 #define SCMD_TRACK	16
-#define SCMD_CLS        17
-#define SCMD_BUILDWALK  18
 
 /* do_wizutil */
 #define SCMD_REROLL	0
@@ -217,19 +208,3 @@ struct alias_data {
 #define SCMD_UNLOCK     2
 #define SCMD_LOCK       3
 #define SCMD_PICK       4
-
-/* do_olc */
-#define SCMD_OASIS_REDIT	0
-#define SCMD_OASIS_OEDIT	1
-#define SCMD_OASIS_ZEDIT	2
-#define SCMD_OASIS_MEDIT	3
-#define SCMD_OASIS_SEDIT	4
-#define SCMD_OASIS_CEDIT	5
-#define SCMD_OLC_SAVEINFO	7
-#define SCMD_OASIS_RLIST 	8
-#define SCMD_OASIS_MLIST	9
-#define SCMD_OASIS_OLIST	10
-#define SCMD_OASIS_SLIST	11
-#define SCMD_OASIS_ZLIST        12
-#define SCMD_OASIS_LINKS        13
-#define SCMD_OASIS_AEDIT        14

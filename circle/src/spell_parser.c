@@ -494,7 +494,7 @@ int cast_spell(struct char_data *ch, struct char_data *tch,
     send_to_char(ch, "You can't cast this spell if you're not in a group!\r\n");
     return (0);
   }
-  send_to_char(ch, "%s", CONFIG_OK);
+  send_to_char(ch, "%s", OK);
   say_spell(ch, spellnum, tch, tobj);
 
   return (call_magic(ch, tch, tobj, spellnum, GET_LEVEL(ch), CAST_SPELL));

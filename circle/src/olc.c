@@ -286,7 +286,7 @@ void olc_string(char **string, size_t maxlen, char *arg)
       if (*string != NULL)
 	free(*string);
       *string = strdup(arg);
-      send_to_char(olc_ch, "%s", CONFIG_OK);
+      send_to_char(olc_ch, "%s", OK);
     }
   }
 }

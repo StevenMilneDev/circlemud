@@ -122,8 +122,8 @@ extern int prac_params[4][NUM_CLASSES];
 void list_skills(struct char_data *ch)
 {
   const char *overflow = "\r\n**OVERFLOW**\r\n";
-  int i, sortpos;
-  size_t len = 0, nlen;
+  int i, sortpos, nlen;
+  size_t len = 0;
   char buf2[MAX_STRING_LENGTH];
 
   if (!GET_PRACTICES(ch)) {

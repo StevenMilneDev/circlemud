@@ -1,5 +1,4 @@
 extern const char *circlemud_version;
-extern const char *oasisolc_version;
 extern const char *dirs[];
 extern const char *room_bits[];
 extern const char *exit_bits[];

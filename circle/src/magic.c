@@ -24,6 +24,7 @@
 
 /* external variables */
 extern int mini_mud;
+extern int pk_allowed;
 extern struct spell_info_type spell_info[];
 
 /* external functions */
@@ -351,7 +352,7 @@ void mag_affects(int level, struct char_data *ch, struct char_data *victim,
 
   case SPELL_CURSE:
     if (mag_savingthrow(victim, savetype, 0)) {
-      send_to_char(ch, "%s", CONFIG_NOEFFECT);
+      send_to_char(ch, "%s", NOEFFECT);
       return;
     }
 
@@ -415,7 +416,7 @@ void mag_affects(int level, struct char_data *ch, struct char_data *victim,
 
   case SPELL_POISON:
     if (mag_savingthrow(victim, savetype, 0)) {
-      send_to_char(ch, "%s", CONFIG_NOEFFECT);
+      send_to_char(ch, "%s", NOEFFECT);
       return;
     }
 
@@ -444,7 +445,7 @@ void mag_affects(int level, struct char_data *ch, struct char_data *victim,
     break;
 
   case SPELL_SLEEP:
-    if (!CONFIG_PK_ALLOWED && !IS_NPC(ch) && !IS_NPC(victim))
+    if (!pk_allowed && !IS_NPC(ch) && !IS_NPC(victim))
       return;
     if (MOB_FLAGGED(victim, MOB_NOSLEEP))
       return;
@@ -496,7 +497,7 @@ void mag_affects(int level, struct char_data *ch, struct char_data *victim,
   if (IS_NPC(victim) && !affected_by_spell(victim, spellnum))
     for (i = 0; i < MAX_SPELL_AFFECTS; i++)
       if (AFF_FLAGGED(victim, af[i].bitvector)) {
-	send_to_char(ch, "%s", CONFIG_NOEFFECT);
+	send_to_char(ch, "%s", NOEFFECT);
 	return;
       }
 
@@ -505,7 +506,7 @@ void mag_affects(int level, struct char_data *ch, struct char_data *victim,
    * not have an accumulative effect, then fail the spell.
    */
   if (affected_by_spell(victim,spellnum) && !(accum_duration||accum_affect)) {
-    send_to_char(ch, "%s", CONFIG_NOEFFECT);
+    send_to_char(ch, "%s", NOEFFECT);
     return;
   }
 
@@ -651,7 +652,7 @@ void mag_areas(int level, struct char_data *ch, int spellnum, int savetype)
       continue;
     if (!IS_NPC(tch) && GET_LEVEL(tch) >= LVL_IMMORT)
       continue;
-    if (!CONFIG_PK_ALLOWED && !IS_NPC(ch) && !IS_NPC(tch))
+    if (!pk_allowed && !IS_NPC(ch) && !IS_NPC(tch))
       continue;
     if (!IS_NPC(ch) && IS_NPC(tch) && AFF_FLAGGED(tch, AFF_CHARM))
       continue;
@@ -857,7 +858,7 @@ void mag_unaffects(int level, struct char_data *ch, struct char_data *victim,
 
   if (!affected_by_spell(victim, spell)) {
     if (msg_not_affected)
-      send_to_char(ch, "%s", CONFIG_NOEFFECT);
+      send_to_char(ch, "%s", NOEFFECT);
     return;
   }
 
@@ -927,7 +928,7 @@ void mag_alter_objs(int level, struct char_data *ch, struct obj_data *obj,
   }
 
   if (to_char == NULL)
-    send_to_char(ch, "%s", CONFIG_NOEFFECT);
+    send_to_char(ch, "%s", NOEFFECT);
   else
     act(to_char, TRUE, ch, obj, 0, TO_CHAR);
 

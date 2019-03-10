@@ -17,9 +17,6 @@
 cpp_extern const char *circlemud_version =
 	"CircleMUD, version 3.1";
 
-cpp_extern const char *oasisolc_version =
-	"OasisOLC 2.0.6";
-
 /* strings corresponding to ordinals/bitvectors in structs.h ***********/
 
 
@@ -187,9 +184,6 @@ const char *preference_bits[] = {
   "NO_GOS",
   "NO_GTZ",
   "RMFLG",
-  "D_AUTO",
-  "CLS",
-  "BLDWLK",
   "\n"
 };
 
@@ -243,14 +237,6 @@ const char *connected_types[] = {
   "Self-Delete 1",
   "Self-Delete 2",
   "Disconnecting",
-  "Object edit",
-  "Room edit",
-  "Zone edit",
-  "Mobile edit",
-  "Shop edit",
-  "Text edit",
-  "Config edit",
-  "Social edit",
   "\n"
 };
 
@@ -789,26 +775,6 @@ const char *month_name[] = {
   "Month of the Great Evil"
 };
 
-#if defined(CONFIG_OASIS_MPROG)
-/*
- * Definitions necessary for MobProg support in OasisOLC
- */
-const char *mobprog_types[] = {
-  "INFILE",
-  "ACT",
-  "SPEECH",
-  "RAND",
-  "FIGHT",
-  "DEATH",
-  "HITPRCNT",
-  "ENTRY",
-  "GREET",
-  "ALL_GREET",
-  "GIVE",
-  "BRIBE",
-  "\n"
-};
-#endif
 
 /* --- End of constants arrays. --- */
 

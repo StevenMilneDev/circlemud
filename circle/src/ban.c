@@ -247,7 +247,7 @@ int num_invalid = 0;
 
 int Valid_Name(char *newname)
 {
-  int i, wovels = 0;
+  int i;
   struct descriptor_data *dt;
   char tempname[MAX_INPUT_LENGTH];
 
@@ -256,27 +256,11 @@ int Valid_Name(char *newname)
    * do a 'str_cmp' so people can't do 'Bob' and 'BoB'.  The creating login
    * will not have a character name yet and other people sitting at the
    * prompt won't have characters yet.
-   *
-   * New, unindexed characters (i.e., characters who are in the process of creating)
-   * will have an idnum of -1, set by clear_char() in db.c.  If someone is creating a
-   * character by the same name as the one we are checking, then the name is invalid,
-   * to prevent character duping.
-   * THIS SHOULD FIX THE 'invalid name' if disconnected from OLC-bug - WELCOR 9/00
    */
   for (dt = descriptor_list; dt; dt = dt->next)
     if (dt->character && GET_NAME(dt->character) && !str_cmp(GET_NAME(dt->character), newname))
-      if (GET_IDNUM(dt->character) == -1)
-        return (IS_PLAYING(dt));
+      return (STATE(dt) == CON_PLAYING);
 
-  /* count wovels */
-  for (i = 0; newname[i]; i++) {
-    if (strchr("aeiouyAEIOUY", newname[i]))
-      wovels++;
-  }
-
-  /* return invalid if no wovels */
-  if (!wovels)
-    return (0);
   /* return valid if list doesn't exist */
   if (!invalid_list || num_invalid < 1)
     return (1);

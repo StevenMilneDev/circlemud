@@ -88,10 +88,8 @@
 #define BUG_FILE	LIB_MISC"bugs"	   /*         'bug'		*/
 #define MESS_FILE	LIB_MISC"messages" /* damage messages		*/
 #define SOCMESS_FILE	LIB_MISC"socials"  /* messages for social acts	*/
-#define SOCMESS_FILE_NEW LIB_MISC"socials.new"  /* messages for social acts with aedit patch*/
 #define XNAME_FILE	LIB_MISC"xnames"   /* invalid name substrings	*/
 
-#define CONFIG_FILE	LIB_ETC"config"    /* OasisOLC * GAME CONFIG FL */
 #define PLAYER_FILE	LIB_ETC"players"   /* the player database	*/
 #define MAIL_FILE	LIB_ETC"plrmail"   /* for the mudmail system	*/
 #define BAN_FILE	LIB_ETC"badsites"  /* for the siteban system	*/
@@ -165,8 +163,6 @@ struct reset_com {
 /* zone definition structure. for the 'zone-table'   */
 struct zone_data {
    char	*name;		    /* name of this zone                  */
-   char *builders;          /* namelist of builders allowed to    */
-                            /* modify this zone.		  */
    int	lifespan;           /* how long between resets (minutes)  */
    int	age;                /* current age of this zone (minutes) */
    room_vnum bot;           /* starting room number for this zone */
@@ -234,8 +230,6 @@ struct ban_list_element {
 /* global buffering system */
 
 #ifndef __DB_C__
-extern struct config_data config_info;
-
 extern struct room_data *world;
 extern room_rnum top_of_world;
 
@@ -254,8 +248,10 @@ extern struct index_data *obj_index;
 extern struct obj_data *object_list;
 extern struct obj_data *obj_proto;
 extern obj_rnum top_of_objt;
+#endif
 
-extern struct social_messg *soc_mess_list;
-extern int top_of_socialt;
-
-#endif /* __DB_C__ */
+#ifndef __CONFIG_C__
+extern char	*OK;
+extern char	*NOPERSON;
+extern char	*NOEFFECT;
+#endif

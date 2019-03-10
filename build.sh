@@ -14,6 +14,16 @@ docker rm $NAME
 
 if [ -z "$1" ]; then
 	VOLUME=circle-world:$VOLUME
+elif [ "$1" = "shell" ]; then
+	docker build --tag $IMAGE:$TAG .
+	docker run \
+		--interactive \
+		--tty \
+		--publish 4000:4000 \
+		--name circlemud \
+		circlemud:1.0.0 \
+		/bin/bash
+		exit
 elif [ "$1" = "dev" ]; then
 	# If initial state not populated then populate it now
 	if [ ! -a ./state/etc ]; then

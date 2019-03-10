@@ -52,26 +52,6 @@ int mail_recip_ok(const char *name);
 
 /* -------------------------------------------------------------------------- */
 
-void free_mail_index(void)
-{
-  mail_index_type *tmp;
-
-  while (mail_index) {
-    tmp = mail_index->next;
-    if (mail_index->list_start) {
-      position_list_type *i, *j;
-      i = mail_index->list_start;
-      while (i) {
-        j = i->next;
-        free(i);
-        i = j;
-      }
-    }
-    free(mail_index);
-    mail_index = tmp;
-  }
-}
-
 int mail_recip_ok(const char *name)
 {
   struct char_file_u tmp_store;
