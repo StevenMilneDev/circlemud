@@ -16,12 +16,12 @@ docker run --detach \
 	circlemud:latest
 ```
 
-Once the container is running, you must connect to it to create the "Implementor" user. This user will be the privileged admin user, with this user it is possible to modify the world files from within the game.
+Once the container has been started, you can connect to the game through telnet on port 4000. The first user created on an instance will be the "Implementor" which is a privileged user that can modify the game world, make sure you login and create this account straight away.
 
 ## Building
-You can build a custom CircleMUD instance by cloning this repository and making changes to the payloads that are deployed to the container. Patches can be applied to the CircleMUD engine by modifying the source files within `payloads/circle`. The files in this directory will be compiled once they have been deployed into the container.
+You can build a custom CircleMUD instance by cloning this repository and making changes to the files that are deployed to the container. Patches can be applied to the CircleMUD engine by modifying the source files within the `circle` directory. The files in this directory will be compiled once they have been deployed into the container.
 
-The world files are stored in the `payloads/circle` directory. Changing these files will change the zones, rooms, mobiles and objects in the game. These files can also be modified from within the game by running the container in "development" mode.
+The world files are stored in the `state/world` directory. Changing these files will change the zones, rooms, mobiles and objects in the game. These files can also be modified from within the game by running the container in "development" mode.
 
 The `build.sh` script automates the process of re-building the Docker image. Running this script will kill any existing containers, rebuild the image and then start a new instance from the image. If you provide a "dev" argument to the script then it will bind mount the world files into the container allowing you to modify them from within the game.
 

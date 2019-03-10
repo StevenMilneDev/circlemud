@@ -12,9 +12,14 @@ VOLUME=/usr/circle/lib
 docker kill $NAME
 docker rm $NAME
 
-if [ "$1" = "dev" ]; then
-	# Create bind-mount area
-	cp -r ./circle/lib/* ./state/
+if [ -z "$1" ]; then
+	VOLUME=circle-world:$VOLUME
+elif [ "$1" = "dev" ]; then
+	# If initial state not populated then populate it now
+	if [ ! -a ./state/etc ]; then
+		cp -r ./circle/lib/* ./state/
+	fi
+
 	TAG=$VERSION-dev
 	VOLUME=$(pwd)/state:$VOLUME
 fi
