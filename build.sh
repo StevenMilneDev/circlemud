@@ -14,7 +14,7 @@ docker rm $NAME
 
 if [ "$1" = "dev" ]; then
 	# Create bind-mount area
-	cp ./payloads/circle/lib/* ./state
+	cp -r ./circle/lib/* ./state/
 	TAG=$VERSION-dev
 	VOLUME=$(pwd)/state:$VOLUME
 fi
