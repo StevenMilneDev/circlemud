@@ -1,5 +1,5 @@
 # CircleMud for Docker
-This repository contains a Dockerised version of [CircleMUD](https://www.circlemud.org/) 3.1. The following extensions have been installed;
+This repository contains a Dockerised version of [CircleMUD](https://www.circlemud.org/) 3.1. The following contributed patches have been installed;
 
 - OasisOLC 2.0.6-3.1 by Harvey Gilpin
 - auto-medit by Jason Yarber
