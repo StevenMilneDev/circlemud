@@ -2,6 +2,7 @@
 
 NAME=circlemud
 VERSION=1.0.0
+REPOSITORY=docker.smilne.dev
 
 IMAGE=$NAME
 PORT=4000
@@ -21,7 +22,7 @@ elif [ "$1" = "shell" ]; then
 		--tty \
 		--publish 4000:4000 \
 		--name circlemud \
-		circlemud:1.0.0 \
+		$REPOSITORY/$IMAGE:$TAG \
 		/bin/bash
 		exit
 elif [ "$1" = "dev" ]; then
@@ -39,4 +40,4 @@ docker run --detach \
 	--publish $PORT:4000 \
 	--volume $VOLUME \
 	--name $NAME \
-	$IMAGE:$TAG
+	$REPOSITORY/$IMAGE:$TAG
