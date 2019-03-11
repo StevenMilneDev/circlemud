@@ -2,6 +2,7 @@
 
 NAME=circlemud
 VERSION=1.0.0-empty
+REPOSITORY=docker.smilne.dev
 
 IMAGE=$NAME
 PORT=4000
@@ -21,12 +22,12 @@ elif [ "$1" = "shell" ]; then
 		--tty \
 		--publish 4000:4000 \
 		--name circlemud \
-		circlemud:1.0.0 \
+		$REPOSITORY/$IMAGE:$TAG \
 		/bin/bash
 		exit
 elif [ "$1" = "dev" ]; then
 	# If initial state not populated then populate it now
-	if [ ! -a ./state/etc/players ]; then
+	if [ ! -d ./state/etc ]; then
 		cp -r ./circle/lib/* ./state/
 	fi
 
@@ -34,9 +35,9 @@ elif [ "$1" = "dev" ]; then
 	VOLUME=$(pwd)/state:$VOLUME
 fi
 
-docker build --tag $IMAGE:$TAG .
+docker build --tag $REPOSITORY/$IMAGE:$TAG .
 docker run --detach \
 	--publish $PORT:4000 \
 	--volume $VOLUME \
 	--name $NAME \
-	$IMAGE:$TAG
+	$REPOSITORY/$IMAGE:$TAG
