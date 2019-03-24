@@ -32,6 +32,8 @@ CircleMUD has a collection of contributed patches, these can be installed by pla
 
 The `build.sh` script automates the process of re-building the Docker image. Running this script will kill any existing containers, rebuild the image and then start a new instance from the image. If you provide a "dev" argument to the script then it will bind mount the world files into the container allowing you to modify them from within the game.
 
+You can modify the world files from within the game by using OasisOLC which has been pre-installed. You can see the OasisOLC handbook in the `doc/` directory for usage information and commands.
+
 ## License
 
 CircleMUD is licensed software, I do not own any rights to it and all licenses and copyright notices have been left in place. This repository is just a repackaging of CircleMUD and a select few contributions in a Docker image. Please refer to the license in the `LICENSE` file included within this repository for more information about the creators of CircleMUD and DikuMUD.
